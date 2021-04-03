@@ -19,13 +19,12 @@ app.delete('/items/:id', Data.deleteOneItem);
 app.post('/items', Data.addAnItem);
 app.put('/items/:id', Data.updateOneItem);
 
-
 app.use('*', (req,res) => {
   res.status(404).send('These are not the droids you are looking for.');
 });
 
-app.use( (error,req,res,next) => {
-  res.status(500).send(`My Bad ... ${error.message}`);
+app.use( (err,req,res,next) => {
+  res.status(500).send(`My Bad ... ${err.message}`);
 });
 
 module.exports = {
