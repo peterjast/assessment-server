@@ -4,23 +4,29 @@ const DataModel = require('./item-model.js');
 
 const Data = {};
 
+const hat = new DataModel({
+  name: 'snapback',
+  description: 'this goes on head'
+});
+hat.save();
+
 Data.addAnItem = async(req,res,next) => {
   try {
     const data = req.body;
     console.log(req.body)
     const item = new DataModel(data);
-    Data.push(item);
-    console.log(Data);
-    res.status(200).send(Data);
+    item.save();
+    res.status(200).send(item);
   } catch(e) { next(e.message); }
 }
 
 Data.getAllItems = async(req, res) => {
-  const items = await DataModel.find({}, function (err, items) {
+  const itemsArr = await DataModel.find({}, function (err, items) {
     if(err) return console.log(err.message);
-    console.log(items);
-    res.status(200).send(Data);
   })
+  res.status(200).send(itemsArr);    
+  console.log(itemsArr);
+
 }
 
 Data.getOneItem = async(req, res) => {
@@ -30,8 +36,9 @@ Data.getOneItem = async(req, res) => {
 }
 
 Data.deleteOneItem = async(req, res) => {
-  // const id = parseInt(req.params.id);
-  // const items = await DataModel.find({_id:id});
+  const id = req.params.id;
+  await DataModel.deleteOne({_id:id});
+  res.status(200).send('deleted');
 }
 
 Data.updateOneItem = async(req, res) => {
